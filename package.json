@@ -1,8 +1,14 @@
 {
-  "name": "TODO",
+  "name": "tsla-exchange-contracts",
   "version": "0.0.0",
-  "description": "TODO",
+  "description": "Synthetic TSLA on-ramp",
   "keywords": [
+    "tsla",
+    "usdc",
+    "synthetix",
+    "snx",
+    "curve",
+    "crv",
     "hardhat",
     "waffle",
     "solidity",
@@ -13,13 +19,9 @@
     "buidler",
     "wow"
   ],
-  "author": "TODO",
-  "license": "TODO",
+  "author": "Nick Barry",
+  "license": "MIT",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "TODO"
-  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
