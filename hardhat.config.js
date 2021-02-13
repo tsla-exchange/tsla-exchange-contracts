@@ -20,7 +20,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: `${ process.env.FORK_URL }`,
-        blockNumber: 11843848,
+        blockNumber: 11844175,
       },
     },
 
