@@ -3,7 +3,6 @@
 pragma solidity ^0.7.0;
 
 import 'synthetix/contracts/interfaces/IERC20.sol';
-import 'synthetix/contracts/interfaces/IExchanger.sol';
 import 'synthetix/contracts/interfaces/ISynthetix.sol';
 
 import './ISwaps.sol';
@@ -15,7 +14,6 @@ contract TSLAExchange {
   address private constant STSLA = 0x918dA91Ccbc32B7a6A0cc4eCd5987bbab6E31e6D;
   // synthetix
   address private constant SNX = 0x97767D7D04Fd0dB0A1a2478DCd4BA85290556B48;
-  address private constant EXCHANGER = 0x0bfDc04B38251394542586969E2356d0D731f7DE;
   // curve
   address private constant SWAPS = 0xD1602F68CC7C4c7B59D686243EA35a9C73B0c6a2;
 
@@ -36,8 +34,6 @@ contract TSLAExchange {
       susdMin,
       msg.sender
     );
-
-    IExchanger(EXCHANGER).settle(msg.sender, 'sUSD');
 
     uint stsla = ISynthetix(SNX).exchangeOnBehalf(
       msg.sender,
