@@ -26,10 +26,10 @@ URL="[NODE_URL]" yarn run hardhat test --network generic
 
 ### Testing
 
-Test contracts via Hardhat:
+To test the contracts via Hardhat, specify a URL from which to fork the mainnet by setting the `FORK_URL` environment variable:
 
 ```bash
-yarn run hardhat test
+FORK_URL="[NODE_URL]" yarn run hardhat test
 ```
 
 Activate gas usage reporting by setting the `REPORT_GAS` environment variable to `"true"`:
