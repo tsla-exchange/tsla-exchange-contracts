@@ -54,7 +54,7 @@ describe('TSLAExchange', function () {
       await delegateApprovals.approveExchangeOnBehalf(instance.address);
 
       await expect(
-        () => instance.exchange(amount)
+        () => instance.exchange(amount, ethers.constants.Zero)
       ).to.changeTokenBalance(
         usdc,
         signer,
@@ -68,7 +68,7 @@ describe('TSLAExchange', function () {
       await delegateApprovals.approveExchangeOnBehalf(instance.address);
 
       await expect(
-        () => instance.exchange(amount)
+        () => instance.exchange(amount, ethers.constants.Zero)
       ).to.changeTokenBalance(
         stsla,
         signer,
@@ -79,9 +79,19 @@ describe('TSLAExchange', function () {
     describe('reverts if', function () {
       it('contract is not approved to spend USDC', async function () {
         await expect(
-          instance.exchange(ethers.constants.One)
+          instance.exchange(ethers.constants.One, ethers.constants.Zero)
         ).to.be.revertedWith(
           'ERC20: transfer amount exceeds allowance'
+        );
+      });
+
+      it('received sUSD is less than given minimum', async function () {
+        await usdc.approve(instance.address, ethers.constants.MaxUint256);
+
+        await expect(
+          instance.exchange(ethers.constants.One, ethers.constants.MaxUint256)
+        ).to.be.revertedWith(
+          'slippage'
         );
       });
 
@@ -89,7 +99,7 @@ describe('TSLAExchange', function () {
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
         await expect(
-          instance.exchange(ethers.constants.One)
+          instance.exchange(ethers.constants.One, ethers.constants.Zero)
         ).to.be.revertedWith(
           'Not approved to act on behalf'
         );

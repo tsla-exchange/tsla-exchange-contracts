@@ -24,7 +24,8 @@ contract TSLAExchange {
   }
 
   function exchange (
-    uint amount
+    uint amount,
+    uint susdMin
   ) external {
     IERC20(USDC).transferFrom(msg.sender, address(this), amount);
 
@@ -35,6 +36,8 @@ contract TSLAExchange {
       0,
       msg.sender
     );
+
+    require(susd >= susdMin, 'slippage');
 
     IExchanger(EXCHANGER).settle(msg.sender, 'sUSD');
 
