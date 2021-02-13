@@ -41,7 +41,7 @@ contract TSLAExchange {
 
     IExchanger(EXCHANGER).settle(msg.sender, 'sUSD');
 
-    uint stsla = ISynthetix(SNX).exchangeOnBehalf(
+    ISynthetix(SNX).exchangeOnBehalf(
       msg.sender,
       'sUSD',
       susd / 2,
