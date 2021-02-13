@@ -88,11 +88,11 @@ describe('TSLAExchange', function () {
       it('received sUSD is less than given minimum', async function () {
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
+        const amount = ethers.BigNumber.from('1000000000');
+
         await expect(
-          instance.exchange(ethers.constants.One, ethers.constants.MaxUint256)
-        ).to.be.revertedWith(
-          'slippage'
-        );
+          instance.exchange(amount, amount)
+        ).to.be.reverted;
       });
 
       it('contract is not approved to exchange on Synthetix', async function () {

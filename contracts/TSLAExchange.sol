@@ -33,11 +33,9 @@ contract TSLAExchange {
       USDC,
       SUSD,
       amount,
-      0,
+      susdMin,
       msg.sender
     );
-
-    require(susd >= susdMin, 'slippage');
 
     IExchanger(EXCHANGER).settle(msg.sender, 'sUSD');
 
