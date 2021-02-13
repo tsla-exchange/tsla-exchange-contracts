@@ -56,7 +56,7 @@ describe('TSLAExchange', function () {
       const [susd, stsla] = await instance.callStatic.exchange(amount, ethers.constants.Zero);
 
       expect(susd).to.equal('986024346725145854844');
-      expect(stsla).to.equal('604316776918850226');
+      expect(stsla).to.equal('1208633553837700453');
     });
 
     it('decreases USDC balance of sender', async function () {
@@ -83,7 +83,7 @@ describe('TSLAExchange', function () {
       ).to.changeTokenBalance(
         stsla,
         signer,
-        ethers.BigNumber.from('604315696848989437')
+        ethers.BigNumber.from('1208631393697978875')
       );
     });
 

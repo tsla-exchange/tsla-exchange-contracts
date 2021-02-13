@@ -42,7 +42,7 @@ contract TSLAExchange {
     uint stsla = ISynthetix(SNX).exchangeOnBehalf(
       msg.sender,
       'sUSD',
-      susd / 2,
+      susd,
       'sTSLA'
     );
 
