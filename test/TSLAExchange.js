@@ -48,6 +48,17 @@ describe('TSLAExchange', function () {
   });
 
   describe('#exchange', function () {
+    it('returns sUSD and sTSLA outputs', async function () {
+      const amount = ethers.BigNumber.from('1000000000');
+      await usdc.approve(instance.address, ethers.constants.MaxUint256);
+      await delegateApprovals.approveExchangeOnBehalf(instance.address);
+
+      const [susd, stsla] = await instance.callStatic.exchange(amount, ethers.constants.Zero);
+
+      expect(susd).to.equal('986024346725145854844');
+      expect(stsla).to.equal('604316776918850226');
+    });
+
     it('decreases USDC balance of sender', async function () {
       const amount = ethers.BigNumber.from('1000000000');
       await usdc.approve(instance.address, ethers.constants.MaxUint256);

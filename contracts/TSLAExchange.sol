@@ -26,7 +26,7 @@ contract TSLAExchange {
   function exchange (
     uint amount,
     uint susdMin
-  ) external {
+  ) external returns (uint, uint) {
     IERC20(USDC).transferFrom(msg.sender, address(this), amount);
 
     uint susd = ISwaps(SWAPS).exchange_with_best_rate(
@@ -39,11 +39,13 @@ contract TSLAExchange {
 
     IExchanger(EXCHANGER).settle(msg.sender, 'sUSD');
 
-    ISynthetix(SNX).exchangeOnBehalf(
+    uint stsla = ISynthetix(SNX).exchangeOnBehalf(
       msg.sender,
       'sUSD',
       susd / 2,
       'sTSLA'
     );
+
+    return (susd, stsla);
   }
 }
