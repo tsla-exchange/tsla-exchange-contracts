@@ -7,6 +7,9 @@ import 'synthetix/contracts/interfaces/ISynthetix.sol';
 
 import './ISwaps.sol';
 
+/**
+ * @title sTSLA on-ramp
+ */
 contract TSLAExchange {
   // tokens
   address private constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
@@ -21,13 +24,22 @@ contract TSLAExchange {
     IERC20(USDC).approve(SWAPS, type(uint).max);
   }
 
+  /**
+   * @notice exchange USDC for sTSLA on behalf of sender
+   * @dev contract must be approved to spend USDC
+   * @dev contract must be approved to exchange on Synthetix on behalf of sender
+   * @param amount quantity of USDC to exchange
+   * @param susdMin minimum quantity of sUSD output by Curve
+   * @return susd sUSD output amount
+   * @return stsla sTSLA output amount
+   */
   function exchange (
     uint amount,
     uint susdMin
-  ) external returns (uint, uint) {
+  ) external returns (uint susd, uint stsla) {
     IERC20(USDC).transferFrom(msg.sender, address(this), amount);
 
-    uint susd = ISwaps(SWAPS).exchange_with_best_rate(
+    susd = ISwaps(SWAPS).exchange_with_best_rate(
       USDC,
       SUSD,
       amount,
@@ -35,7 +47,7 @@ contract TSLAExchange {
       msg.sender
     );
 
-    uint stsla = ISynthetix(SNX).exchangeOnBehalf(
+    stsla = ISynthetix(SNX).exchangeOnBehalf(
       msg.sender,
       'sUSD',
       susd,
