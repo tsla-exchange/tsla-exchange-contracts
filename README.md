@@ -51,3 +51,11 @@ A documentation site is output on contract compilation to the `docgen` directory
 ```bash
 yarn run hardhat docgen
 ```
+
+### Deployment
+
+The contract can be deployed using the `deploy` task:
+
+```bash
+yarn run hardhat deploy
+```
