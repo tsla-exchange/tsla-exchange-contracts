@@ -1,6 +1,6 @@
 # TSLA Exchange
 
-Synthetic TSLA on-ramp.
+Synthetic TSLA on-ramp.  Trades on Synthetix by day, and Balancer by night.
 
 Contract deployed to [0x3df4539a20F11D8D737f17290DA726ff4B049aD5](https://etherscan.io/address/0x3df4539a20F11D8D737f17290DA726ff4B049aD5).
 
