@@ -1,4 +1,5 @@
 require('@nomiclabs/hardhat-waffle');
+require('@nomiclabs/hardhat-etherscan');
 require('hardhat-dependency-compiler');
 require('hardhat-docgen');
 require('hardhat-gas-reporter');
@@ -53,6 +54,10 @@ module.exports = {
   docgen: {
     runOnCompile: true,
     clear: true,
+  },
+
+  etherscan: {
+    apiKey: `${ process.env.ETHERSCAN_API_KEY }`,
   },
 
   gasReporter: {
