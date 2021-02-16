@@ -36,12 +36,14 @@ contract TSLAExchange {
    * @dev contract must be approved to exchange on Synthetix on behalf of sender
    * @param amount quantity of USDC to exchange
    * @param susdMin minimum quantity of sUSD output by Curve
+   * @param stslaMin minimum quantity of sTSLA output by Balancer
    * @return susd sUSD output amount
    * @return stsla sTSLA output amount
    */
   function exchange (
     uint amount,
-    uint susdMin
+    uint susdMin,
+    uint stslaMin
   ) external returns (uint susd, uint stsla) {
     IERC20(USDC).transferFrom(msg.sender, address(this), amount);
 
@@ -62,7 +64,7 @@ contract TSLAExchange {
         SUSD,
         susd,
         STSLA,
-        0,
+        stslaMin,
         type(uint).max
       );
 

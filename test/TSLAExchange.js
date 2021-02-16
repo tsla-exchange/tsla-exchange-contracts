@@ -68,6 +68,7 @@ describe('TSLAExchange', function () {
 
         const [susdBalance, stslaBalance] = await instance.callStatic.exchange(
           amount,
+          ethers.constants.Zero,
           ethers.constants.Zero
         );
 
@@ -81,7 +82,11 @@ describe('TSLAExchange', function () {
         await delegateApprovals.approveExchangeOnBehalf(instance.address);
 
         await expect(
-          () => instance.exchange(amount, ethers.constants.Zero)
+          () => instance.exchange(
+            amount,
+            ethers.constants.Zero,
+            ethers.constants.Zero
+          )
         ).to.changeTokenBalance(
           usdc,
           signer,
@@ -95,7 +100,11 @@ describe('TSLAExchange', function () {
         await delegateApprovals.approveExchangeOnBehalf(instance.address);
 
         await expect(
-          () => instance.exchange(amount, ethers.constants.Zero)
+          () => instance.exchange(
+            amount,
+            ethers.constants.Zero,
+            ethers.constants.Zero
+          )
         ).to.changeTokenBalance(
           stsla,
           signer,
@@ -108,7 +117,11 @@ describe('TSLAExchange', function () {
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
         await delegateApprovals.approveExchangeOnBehalf(instance.address);
 
-        await instance.callStatic.exchange(amount, ethers.constants.Zero);
+        await instance.callStatic.exchange(
+          amount,
+          ethers.constants.Zero,
+          ethers.constants.Zero
+        );
 
         expect(
           await usdc.callStatic.balanceOf(instance.address)
@@ -132,7 +145,11 @@ describe('TSLAExchange', function () {
       describe('reverts if', function () {
         it('contract is not approved to spend USDC', async function () {
           await expect(
-            instance.exchange(ethers.constants.One, ethers.constants.Zero)
+            instance.exchange(
+              ethers.constants.One,
+              ethers.constants.Zero,
+              ethers.constants.Zero
+            )
           ).to.be.revertedWith(
             'ERC20: transfer amount exceeds allowance'
           );
@@ -145,7 +162,8 @@ describe('TSLAExchange', function () {
           await expect(
             instance.exchange(
               ethers.utils.parseUnits('1', 6),
-              ethers.utils.parseUnits('1', 18)
+              ethers.utils.parseUnits('1', 18),
+              ethers.constants.Zero
             )
           ).to.be.reverted;
         });
@@ -154,7 +172,11 @@ describe('TSLAExchange', function () {
           await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
           await expect(
-            instance.exchange(ethers.constants.One, ethers.constants.Zero)
+            instance.exchange(
+              ethers.constants.One,
+              ethers.constants.Zero,
+              ethers.constants.Zero
+            )
           ).to.be.revertedWith(
             'Not approved to act on behalf'
           );
@@ -173,6 +195,7 @@ describe('TSLAExchange', function () {
 
         const [susdBalance, stslaBalance] = await instance.callStatic.exchange(
           amount,
+          ethers.constants.Zero,
           ethers.constants.Zero
         );
 
@@ -185,7 +208,11 @@ describe('TSLAExchange', function () {
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
         await expect(
-          () => instance.exchange(amount, ethers.constants.Zero)
+          () => instance.exchange(
+            amount,
+            ethers.constants.Zero,
+            ethers.constants.Zero
+          )
         ).to.changeTokenBalance(
           usdc,
           signer,
@@ -198,7 +225,11 @@ describe('TSLAExchange', function () {
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
         await expect(
-          () => instance.exchange(amount, ethers.constants.Zero)
+          () => instance.exchange(
+            amount,
+            ethers.constants.Zero,
+            ethers.constants.Zero
+          )
         ).to.changeTokenBalance(
           stsla,
           signer,
@@ -210,7 +241,11 @@ describe('TSLAExchange', function () {
         const amount = ethers.BigNumber.from('1000000000');
         await usdc.approve(instance.address, ethers.constants.MaxUint256);
 
-        await instance.callStatic.exchange(amount, ethers.constants.Zero);
+        await instance.callStatic.exchange(
+          amount,
+          ethers.constants.Zero,
+          ethers.constants.Zero
+        );
 
         expect(
           await usdc.callStatic.balanceOf(instance.address)
@@ -234,7 +269,11 @@ describe('TSLAExchange', function () {
       describe('reverts if', function () {
         it('contract is not approved to spend USDC', async function () {
           await expect(
-            instance.exchange(ethers.constants.One, ethers.constants.Zero)
+            instance.exchange(
+              ethers.constants.One,
+              ethers.constants.Zero,
+              ethers.constants.Zero
+            )
           ).to.be.revertedWith(
             'ERC20: transfer amount exceeds allowance'
           );
@@ -246,9 +285,24 @@ describe('TSLAExchange', function () {
           await expect(
             instance.exchange(
               ethers.utils.parseUnits('1', 6),
-              ethers.utils.parseUnits('1', 18)
+              ethers.utils.parseUnits('1', 18),
+              ethers.constants.Zero
             )
           ).to.be.reverted;
+        });
+
+        it('received sTSLA is less than given minimum', async function () {
+          await usdc.approve(instance.address, ethers.constants.MaxUint256);
+
+          await expect(
+            instance.exchange(
+              ethers.utils.parseUnits('1', 6),
+              ethers.constants.Zero,
+              ethers.utils.parseUnits('1', 18)
+            )
+          ).to.be.revertedWith(
+            'ERR_LIMIT_OUT'
+          );
         });
       });
     });
