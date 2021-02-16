@@ -31,7 +31,7 @@
     "eslint-plugin-mocha": "^8.0.0",
     "ethereum-waffle": "^3.2.1",
     "ethers": "^5.0.26",
-    "hardhat": "^2.0.8",
+    "hardhat": "^2.0.10",
     "hardhat-dependency-compiler": "^1.0.2",
     "hardhat-docgen": "^1.0.0",
     "hardhat-gas-reporter": "^1.0.4",

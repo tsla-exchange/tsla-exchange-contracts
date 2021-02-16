@@ -3,8 +3,10 @@
 pragma solidity ^0.7.0;
 
 import 'synthetix/contracts/interfaces/IERC20.sol';
+import 'synthetix/contracts/interfaces/IExchangeRates.sol';
 import 'synthetix/contracts/interfaces/ISynthetix.sol';
 
+import './IBPool.sol';
 import './ISwaps.sol';
 
 /**
@@ -17,11 +19,15 @@ contract TSLAExchange {
   address private constant STSLA = 0x918dA91Ccbc32B7a6A0cc4eCd5987bbab6E31e6D;
   // synthetix
   address private constant SNX = 0x97767D7D04Fd0dB0A1a2478DCd4BA85290556B48;
+  address private constant EXCHANGE_RATES = 0xd69b189020EF614796578AfE4d10378c5e7e1138;
   // curve
   address private constant SWAPS = 0xD1602F68CC7C4c7B59D686243EA35a9C73B0c6a2;
+  // balancer
+  address private constant BPOOL = 0x055dB9AFF4311788264798356bbF3a733AE181c6;
 
   constructor () {
     IERC20(USDC).approve(SWAPS, type(uint).max);
+    IERC20(SUSD).approve(BPOOL, type(uint).max);
   }
 
   /**
@@ -39,20 +45,36 @@ contract TSLAExchange {
   ) external returns (uint susd, uint stsla) {
     IERC20(USDC).transferFrom(msg.sender, address(this), amount);
 
+    bool stale = IExchangeRates(EXCHANGE_RATES).rateIsStale(
+      'sTSLA'
+    );
+
     susd = ISwaps(SWAPS).exchange_with_best_rate(
       USDC,
       SUSD,
       amount,
       susdMin,
-      msg.sender
+      stale ? address(this) : msg.sender
     );
 
-    stsla = ISynthetix(SNX).exchangeOnBehalf(
-      msg.sender,
-      'sUSD',
-      susd,
-      'sTSLA'
-    );
+    if (stale) {
+      (stsla, ) = IBPool(BPOOL).swapExactAmountIn(
+        SUSD,
+        susd,
+        STSLA,
+        0,
+        type(uint).max
+      );
+
+      IERC20(STSLA).transfer(msg.sender, stsla);
+    } else {
+      stsla = ISynthetix(SNX).exchangeOnBehalf(
+        msg.sender,
+        'sUSD',
+        susd,
+        'sTSLA'
+      );
+    }
 
     return (susd, stsla);
   }
