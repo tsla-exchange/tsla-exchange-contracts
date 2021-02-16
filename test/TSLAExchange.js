@@ -7,6 +7,7 @@ const BPOOL = '0x055dB9AFF4311788264798356bbF3a733AE181c6';
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
 const SUSD = '0x57Ab1ec28D129707052df4dF418D58a2D46d5f51';
 const STSLA = '0x918dA91Ccbc32B7a6A0cc4eCd5987bbab6E31e6D';
+const SYSTEM_STATUS = '0x1c86B3CDF2a60Ae3a574f7f71d44E2C50BDdB87E';
 
 describe('TSLAExchange', function () {
   let delegateApprovals;
@@ -187,6 +188,23 @@ describe('TSLAExchange', function () {
     describe('after hours', function () {
       before(async function () {
         await ethers.provider.send('evm_mine', [1613371823]);
+        await hre.network.provider.request({
+          method: 'hardhat_impersonateAccount',
+          params: ['0xC105Ea57Eb434Fbe44690d7Dec2702e4a2FBFCf7'],
+        });
+
+        const signer = await ethers.provider.getSigner('0xC105Ea57Eb434Fbe44690d7Dec2702e4a2FBFCf7');
+
+        const systemStatus = await ethers.getContractAt(
+          'SystemStatus',
+          SYSTEM_STATUS,
+          signer
+        );
+
+        await systemStatus.connect(signer)['suspendSynthExchange(bytes32,uint256)'](
+          ethers.utils.formatBytes32String('sTSLA'),
+          ethers.constants.One
+        );
       });
 
       it('returns sUSD and sTSLA outputs', async function () {

@@ -12,6 +12,7 @@ module.exports = {
     'plugin:mocha/recommended',
   ],
   'globals': {
+    'hre': 'readonly',
     'task': 'readonly',
     'ethers': 'readonly',
   },

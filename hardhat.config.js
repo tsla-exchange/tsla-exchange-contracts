@@ -9,13 +9,20 @@ require('./tasks/deploy.js');
 
 module.exports = {
   solidity: {
-    version: '0.7.6',
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
+    compilers: [
+      {
+        version: '0.7.6',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
       },
-    },
+      {
+        version: '0.5.16',
+      },
+    ],
   },
 
   networks: {
@@ -39,6 +46,7 @@ module.exports = {
     paths: [
       '@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol',
       'synthetix/contracts/interfaces/IDelegateApprovals.sol',
+      'synthetix/contracts/SystemStatus.sol',
     ],
   },
 
