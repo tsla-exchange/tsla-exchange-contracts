@@ -25,15 +25,16 @@ describe('TSLAExchange', function () {
     delegateApprovals = await ethers.getContractAt('IDelegateApprovals', DELEGATE_APPROVALS);
 
     [signer] = await ethers.getSigners();
-    let uniswapRouter = await ethers.getContractAt('IUniswapV2Router02', UNISWAP_ROUTER);
+    const uniswapRouter = await ethers.getContractAt('IUniswapV2Router02', UNISWAP_ROUTER);
 
-    uniswapRouter.connect(signer).swapExactETHForTokens(
+    await uniswapRouter.connect(signer).swapExactETHForTokens(
       ethers.constants.Zero,
       [await uniswapRouter.callStatic.WETH(), USDC],
       signer.address,
       ethers.constants.MaxUint256,
       { value: ethers.utils.parseEther('1000') }
     );
+
   });
 
   beforeEach(async function () {
